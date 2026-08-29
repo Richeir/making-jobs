@@ -74,7 +74,7 @@ function cardDone(c: any) {
     </div>
 
     <template v-for="c in cards" :key="c.no">
-      <article v-if="cardVisible(c)" class="card" :data-card="c.no">
+      <article v-if="cardVisible(c)" class="card" :id="'card-' + c.no" :data-card="c.no">
       <div class="card-hd">
         <span class="dot">{{ c.layer }}</span>
         <h2>{{ c.layerName }} · {{ c.title.replace(/<[^>]+>/g, "").replace(/^[①②③④⑤★]\s*/, "") }}</h2>
