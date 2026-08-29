@@ -55,7 +55,6 @@ docs/.vitepress/cache/
 docs/.vitepress/data/checklist.json
 tools/__tests__/baseline-data.json
 
-# 说明：站点页面由 content/*.md + docs/skills/*.md 经 VitePress 产出。
-# 对照期旧的 index.html / tools/build_web.py 仍在仓库，迁移完成后退役。
-# 本地预览：npm run docs:dev    本地构建：npm run docs:build
-#   （生成数据+构建： python3 tools/build_web.py  ->  改为 npm run build:data && npm run docs:build）
+# index.html 与 build_web.py 已退役（PR #5）。站点由 content/*.md + docs/skills/*.md
+# 经 VitePress 在 CI 构建部署；生成物（dist/、checklist.json）均不入库。
+#   本地预览： npm run docs:dev      本地构建： npm run docs:build
