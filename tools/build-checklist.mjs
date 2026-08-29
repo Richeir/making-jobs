@@ -8,9 +8,10 @@
  * Fidelity contract: the produced view-model must deep-equal the `const DATA`
  * payload embedded in the legacy index.html (gate: tools/__tests__/parse.test.mjs).
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import matter from "gray-matter";
 
 // --------------------------------------------------------------------------- //
 // helpers mirroring Python semantics
@@ -376,8 +377,56 @@ export function refine(v) {
   return v;
 }
 
-export function buildData(src) {
-  return refine(buildViews(parse(readFileSync(src, "utf8"))));
+export function buildData(src, skillsDir = null) {
+  const v = refine(buildViews(parse(readFileSync(src, "utf8"))));
+  const dir = skillsDir || resolve(dirname(resolve(src)), "..", "docs", "skills");
+  if (existsSync(dir)) {
+    const skills = scanSkills(dir);
+    attachSkillLinks(v, skills);
+    v.skillSidebar = buildSkillSidebar(skills);
+  }
+  return v;
+}
+
+// --------------------------------------------------------------------------- //
+// skill pages: frontmatter `checklist: ["3.1"]` -> backlinks + sidebar
+// --------------------------------------------------------------------------- //
+export function scanSkills(dir) {
+  const out = [];
+  for (const f of readdirSync(dir)) {
+    if (!f.endsWith(".md") || f.startsWith("_")) continue;
+    const { data } = matter(readFileSync(join(dir, f), "utf8"));
+    const file = f.replace(/\.md$/, "");
+    for (const blk of data.checklist || [])
+      out.push({ id: blk, file, link: `/making-jobs/skills/${file}`, title: data.title || file });
+  }
+  return out;
+}
+
+export function attachSkillLinks(v, skills) {
+  const byId = {};
+  for (const s of skills) (byId[s.id] ??= []).push(s);
+  const rec = (n) => {
+    const hits = byId[n.id];
+    if (hits && hits.length) n.link = hits[0].link; // first page wins; deterministic by file scan order
+    n.subs.forEach(rec);
+  };
+  for (const c of v.cards) c.blocks.forEach(rec);
+  return v;
+}
+
+export function buildSkillSidebar(skills) {
+  // group by layer (block id leading digit), dedupe per file
+  const groups = {};
+  for (const s of skills) {
+    const layer = /^\d+/.exec(s.id)?.[0] || "7";
+    (groups[layer] ??= { layer, items: [], seen: new Set() });
+    if (!groups[layer].seen.has(s.file)) {
+      groups[layer].seen.add(s.file);
+      groups[layer].items.push({ text: s.title, link: s.link });
+    }
+  }
+  return Object.values(groups).map(({ layer, items }) => ({ layer, items }));
 }
 
 // --------------------------------------------------------------------------- //
@@ -388,7 +437,7 @@ if (isMain) {
   const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
   const src = process.argv[2] ? resolve(process.argv[2]) : resolve(ROOT, "content/2027-programmer-job-skills-checklist.md");
   const out = resolve(ROOT, "docs/.vitepress/data/checklist.json");
-  const v = buildData(src);
+  const v = buildData(src, resolve(ROOT, "docs/skills"));
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(v)); // 紧凑输出，与旧 payload 的 separators 语义一致
   const len = (n) => n.items.length + n.subs.reduce((a, s) => a + len(s), 0);

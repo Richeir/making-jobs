@@ -25,5 +25,5 @@ test("cards 覆盖 6 个能力层，条目数 129", () => {
 });
 
 test.runIf(BASELINE)("与旧 Python 基线逐字段一致", () => {
-  expect(buildData(SRC)).toEqual(BASELINE);
+  expect(buildData(SRC, "/nonexistent-skills-dir")).toEqual(BASELINE);
 });
