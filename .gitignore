@@ -53,6 +53,7 @@ npm-debug.log*
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 docs/.vitepress/data/checklist.json
+tools/__tests__/baseline-data.json
 
 # 说明：站点页面由 content/*.md + docs/skills/*.md 经 VitePress 产出。
 # 对照期旧的 index.html / tools/build_web.py 仍在仓库，迁移完成后退役。

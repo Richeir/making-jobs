@@ -9,9 +9,9 @@
   },
   "scripts": {
     "build:data": "node tools/build-checklist.mjs",
-    "predev": "echo skip-data",
+    "predev": "node tools/build-checklist.mjs",
     "docs:dev": "vitepress dev docs",
-    "prebuild": "echo skip-data",
+    "prebuild": "node tools/build-checklist.mjs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "test": "vitest run"
