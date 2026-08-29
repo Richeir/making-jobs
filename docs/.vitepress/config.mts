@@ -1,8 +1,8 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-  srcDir: "docs",
   base: "/making-jobs/",
+  srcExclude: ["skills/_*.md"],
   cleanUrls: true,
   lastUpdated: true,
   title: "2027 程序员求职能力清单",
