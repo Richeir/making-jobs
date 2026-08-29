@@ -49,6 +49,12 @@ npm-debug.log*
 .agents/
 .claude/
 
-# 说明：index.html 虽然由 tools/build_web.py 从 md 生成，
-# 但它是 GitHub Pages 的入口，需要提交；改完 md 后重新生成即可：
-#   python3 tools/build_web.py
+# ---------- VitePress 构建产物（不入库） ----------
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/.vitepress/data/checklist.json
+
+# 说明：站点页面由 content/*.md + docs/skills/*.md 经 VitePress 产出。
+# 对照期旧的 index.html / tools/build_web.py 仍在仓库，迁移完成后退役。
+# 本地预览：npm run docs:dev    本地构建：npm run docs:build
+#   （生成数据+构建： python3 tools/build_web.py  ->  改为 npm run build:data && npm run docs:build）

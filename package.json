@@ -1,0 +1,39 @@
+{
+  "name": "making-jobs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "2027 程序员求职能力清单 · VitePress 站点",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build:data": "node tools/build-checklist.mjs",
+    "predev": "echo skip-data",
+    "docs:dev": "vitepress dev docs",
+    "prebuild": "echo skip-data",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Richeir/making-jobs.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Richeir/making-jobs/issues"
+  },
+  "homepage": "https://github.com/Richeir/making-jobs#readme",
+  "devDependencies": {
+    "@vue/test-utils": "^2.5.0",
+    "gray-matter": "^4.0.3",
+    "jsdom": "^30.0.1",
+    "vitepress": "^1.6.4",
+    "vitest": "^4.1.11"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "esbuild@0.28.2": true
+  }
+}
