@@ -1,6 +1,7 @@
 name: Deploy VitePress site to Pages
 on:
   push: { branches: [main] }
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,6 +28,7 @@ jobs:
           path: docs/.vitepress/dist
   deploy:
     needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
