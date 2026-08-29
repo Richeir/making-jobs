@@ -1,6 +1,7 @@
 import DefaultTheme from "vitepress/theme";
 import ComingSoon from "./components/ComingSoon.vue";
 import ChecklistBoard from "./components/ChecklistBoard.vue";
+import ScorePanel from "./components/ScorePanel.vue";
 import ProgressRing from "./components/ProgressRing.vue";
 import "./custom.css";
 
@@ -9,6 +10,7 @@ export default {
   enhanceApp(ctx) {
     ctx.app.component("ComingSoon", ComingSoon);
     ctx.app.component("ChecklistBoard", ChecklistBoard);
+    ctx.app.component("ScorePanel", ScorePanel);
     ctx.app.component("ProgressRing", ProgressRing);
   },
 };
