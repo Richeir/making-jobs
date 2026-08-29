@@ -1,0 +1,54 @@
+# ---------- 系统 / 编辑器 ----------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+.vscode/
+*.code-workspace
+.sublimelinterrc
+
+# ---------- Python（tools/build_web.py）----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Node（若以后加构建或部署脚本）----------
+node_modules/
+.npm/
+package-lock.json.bak
+yarn-error.log*
+pnpm-debug.log*
+npm-debug.log*
+*.log
+
+# ---------- 本地临时产物：预览截图、导出、本地数据 ----------
+/preview/
+/shots/
+/tmp/
+*.tmp
+*.bak
+*.sqlite
+*.db
+# 本地服务与隧道凭据
+.env
+.env.*
+!.env.example
+
+# ---------- Agent / 工具本地状态（不入库）----------
+.codex/
+.agents/
+.claude/
+
+# 说明：index.html 虽然由 tools/build_web.py 从 md 生成，
+# 但它是 GitHub Pages 的入口，需要提交；改完 md 后重新生成即可：
+#   python3 tools/build_web.py
