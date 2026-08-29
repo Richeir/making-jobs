@@ -30,6 +30,9 @@
     "gray-matter": "^4.0.3",
     "jsdom": "^30.0.1",
     "vitepress": "^1.6.4",
-    "vitest": "^4.1.11"
+    "vitest": "^2.1.9"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true
   }
 }
