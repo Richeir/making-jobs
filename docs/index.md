@@ -15,7 +15,7 @@ features:
   - title: 五层能力模型
     details: 工程底座 → AI 协作 → AI 构建 → 判断力 → 信任资本
   - title: 178 项可验证行为
-    details: 每条都是能拿出证据的行为，不是标签
+    details: 清单 129 项 + 门槛与计划 49 项；每条都是能拿出证据的行为，不是标签
   - title: 进度本地保存
     details: 勾选/打分存本机，可导出 JSON 迁移设备
 ---
