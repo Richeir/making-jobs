@@ -37,37 +37,82 @@ body{margin:0;background:var(--bg);color:var(--text);
 b{font-weight:650}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--surface2);
   border:1px solid var(--line);border-radius:4px;padding:.05em .3em}
-.wrap{max-width:1120px;margin:0 auto;padding:0 18px 72px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 26px 80px}
 .muted{color:var(--muted)}
 .small{font-size:12.5px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-/* ---------- header ---------- */
-header.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);
-  backdrop-filter:saturate(1.6) blur(12px);border-bottom:1px solid var(--line)}
-.top-in{max-width:1120px;margin:0 auto;padding:14px 18px 0}
-.top-row{display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;justify-content:space-between}
-.kicker{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-h1{margin:2px 0 4px;font-size:22px;line-height:1.25;letter-spacing:-.01em}
-.lead{margin:0;font-size:13px;color:var(--muted);max-width:62ch}
-.gauge{display:flex;align-items:center;gap:14px}
+/* ---------- app shell: collapsible left sidebar + content ---------- */
+:root{--side-w:292px}
+.app{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr);align-items:start;
+  transition:grid-template-columns .22s ease}
+.side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;z-index:40;min-width:0;
+  background:color-mix(in srgb,var(--surface) 62%,var(--bg));border-right:1px solid var(--line)}
+.main-col{min-width:0;position:relative}
+.collapse-btn{position:absolute;top:16px;right:-13px;z-index:46;width:26px;height:26px;display:grid;
+  place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--line-strong);
+  color:var(--muted);cursor:pointer;box-shadow:var(--shadow);padding:0}
+.collapse-btn:hover{color:var(--accent);border-color:var(--accent)}
+.collapse-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.collapse-btn svg{transition:transform .22s ease}
+body.side-collapsed .collapse-btn svg{transform:rotate(180deg)}
+.side-top{display:flex;align-items:flex-start;padding:14px 14px 10px 16px}
+.brand{display:flex;gap:9px;align-items:flex-start;min-width:0}
+.brand .mark{width:32px;height:32px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:12.5px;
+  font-weight:700;color:#fff;background:linear-gradient(140deg,var(--accent),var(--premium));letter-spacing:-.03em}
+.brand-txt{min-width:0}
+.kicker{display:block;font-size:10.5px;line-height:1.45;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted)}
+h1{margin:2px 0 0;font-size:16px;line-height:1.3;letter-spacing:-.01em}
+.side-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 12px 14px 16px;
+  scrollbar-width:thin}
+.side-scroll::-webkit-scrollbar{width:9px}
+.side-scroll::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px;border:3px solid transparent;
+  background-clip:padding-box}
+.lead{margin:0 0 12px;font-size:12.5px;line-height:1.55;color:var(--muted)}
+.gauge{display:flex;gap:12px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;
+  background:var(--surface);box-shadow:var(--shadow)}
 .gauge .ring{position:relative;width:56px;height:56px;flex:none}
 .gauge svg{display:block;transform:rotate(-90deg)}
 .gauge .ring-val{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;font-weight:650}
-.gauge .ctrls{display:grid;gap:6px;justify-items:end}
-.gauge .legend{display:grid;gap:2px;font-size:12px;color:var(--muted)}
-.gauge .btns{display:flex;gap:6px}
-.gauge .btn{font-size:11.5px;padding:3px 8px}
-.gauge .legend b{color:var(--text)}
-.tabs{display:flex;gap:2px;margin-top:12px;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{appearance:none;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);
-  font:inherit;font-size:14px;padding:9px 12px;cursor:pointer;white-space:nowrap;display:flex;gap:7px;align-items:center}
-.tab:hover{color:var(--text)}
-.tab[aria-selected=true]{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
-.tab .cnt{font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--line);
-  border-radius:999px;padding:0 6px}
-.tab .cnt.warn{color:var(--danger);border-color:var(--danger-line);background:var(--danger-bg)}
+.legend{display:grid;gap:1px;font-size:11.5px;line-height:1.5;color:var(--muted);min-width:0}
+.legend b{color:var(--text)}
+.side-sect{margin:18px 0 6px;padding-left:6px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted)}
+.nav{display:grid;gap:2px}
+.nav-item{position:relative;display:flex;gap:9px;align-items:center;width:100%;text-align:left;font:inherit;
+  font-size:13.5px;color:var(--muted);background:none;border:1px solid transparent;border-radius:10px;padding:7px 8px;
+  cursor:pointer;transition:background .12s,color .12s}
+.nav-item:hover{color:var(--text);background:var(--surface)}
+.nav-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nav-item .ico{width:22px;height:22px;flex:none;display:none;place-items:center;border-radius:7px;font-size:11.5px;
+  background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
+.nav-item[aria-selected=true]{color:var(--text);background:var(--surface);border-color:var(--line);font-weight:650;
+  box-shadow:var(--shadow)}
+.cnt{font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--line);
+  border-radius:999px;padding:0 6px;margin-left:auto}
+.cnt.warn{color:var(--danger);border-color:var(--danger-line);background:var(--danger-bg)}
+.outline{display:grid;gap:1px}
+.ol-item{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:center;font:inherit;
+  font-size:12.5px;text-align:left;color:var(--muted);background:none;border:0;border-left:2px solid transparent;
+  border-radius:0 9px 9px 0;padding:5px 8px 5px 6px;cursor:pointer}
+.ol-item:hover{background:var(--surface);color:var(--text)}
+.ol-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ol-item.current{border-left-color:var(--accent);background:var(--surface);color:var(--text)}
+.ol-item.current .ol-nm{font-weight:600}
+.ol-no{font-size:11px;color:var(--muted);text-align:center}
+.ol-nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ol-dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--line-strong);background:transparent}
+.ol-dot.on{background:var(--ok);border-color:var(--ok)}
+.side-foot{display:flex;gap:6px;padding:10px 12px 12px;border-top:1px solid var(--line)}
+.side-foot .btn{flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn svg{flex:none;opacity:.7}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.peek{display:none;position:fixed;right:14px;bottom:16px;z-index:34;align-items:center;gap:7px;font:inherit;
+  font-size:13px;padding:9px 13px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);
+  color:var(--text);box-shadow:0 6px 20px -8px rgba(16,20,28,.45);cursor:pointer}
+.peek b{font-variant-numeric:tabular-nums;color:var(--accent)}
+.scrim{display:none;position:fixed;inset:0;z-index:35;border:0;padding:0;background:rgba(8,10,14,.44)}
 main{padding-top:22px}
 section.view{display:none}
 section.view.on{display:block;animation:fade .18s ease-out}
@@ -76,7 +121,7 @@ section.view.on{display:block;animation:fade .18s ease-out}
 
 /* ---------- cards ---------- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
-  margin-bottom:14px;overflow:hidden}
+  margin-bottom:14px;overflow:hidden;scroll-margin-top:66px}
 .card-hd{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;flex-wrap:wrap}
 .card-hd h2,.card-hd h3{margin:0;font-size:16px;line-height:1.4}
 .card-hd .spacer{flex:1}
@@ -131,7 +176,7 @@ section.view.on{display:block;animation:fade .18s ease-out}
   border-radius:12px;background:var(--surface2)}
 
 /* ---------- toolbar ---------- */
-.toolbar{position:sticky;top:var(--stick,112px);z-index:10;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+.toolbar{position:sticky;top:0;z-index:10;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
   padding:10px 0;background:var(--bg)}
 .search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);
   border-radius:10px;padding:6px 10px;min-width:230px;flex:1}
@@ -262,6 +307,44 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
   display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between}
 footer a{color:var(--accent);text-decoration:none}
 footer a:hover{text-decoration:underline}
+/* ---------- collapsed rail ---------- */
+@media (min-width:961px){
+  body.side-collapsed{--side-w:72px}
+  body.side-collapsed .side-top{padding:14px 0 8px;justify-content:center}
+  body.side-collapsed .brand{justify-content:center}
+  body.side-collapsed .brand-txt,body.side-collapsed .lead,body.side-collapsed .legend,
+  body.side-collapsed .side-sect,body.side-collapsed .outline,body.side-collapsed .nav-item .lab,
+  body.side-collapsed .btn-label,body.side-collapsed .cnt{display:none}
+  body.side-collapsed .side-scroll{padding:0 8px 12px}
+  body.side-collapsed .gauge{justify-content:center;padding:4px 0;border-color:transparent;background:none;
+    box-shadow:none}
+  body.side-collapsed .ring,body.side-collapsed .ring svg{width:44px;height:44px}
+  body.side-collapsed .ring-val{font-size:11px}
+  body.side-collapsed .nav{margin-top:14px}
+  body.side-collapsed .nav-item{justify-content:center;padding:8px 0}
+  body.side-collapsed .nav-item .ico{display:grid}
+  body.side-collapsed .nav-item[aria-selected=true]{border-color:var(--line)}
+  body.side-collapsed .nav-item[aria-selected=true] .ico{background:var(--accent-bg);border-color:var(--accent);
+    color:var(--accent)}
+  body.side-collapsed .side-foot{justify-content:center;padding:10px 8px 12px}
+  body.side-collapsed .side-foot .btn{flex:none;width:34px;height:31px;padding:0}
+  body.side-collapsed .side-foot .btn svg{opacity:.85}
+  body.side-collapsed .cnt.warn{display:block;position:absolute;top:1px;right:4px;margin:0;padding:0 3px;
+    font-size:9.5px;transform:scale(.92)}
+}
+/* ---------- small screens: the sidebar slides in as a drawer ---------- */
+@media (max-width:960px){
+  .app{grid-template-columns:minmax(0,1fr);transition:none}
+  .side{position:fixed;left:0;top:0;bottom:0;height:auto;width:290px;max-width:85vw;transform:translateX(-103%);
+    transition:transform .24s ease;box-shadow:0 20px 50px -14px rgba(8,10,14,.45);background:var(--surface)}
+  body:not(.side-collapsed) .side{transform:none}
+  .collapse-btn{right:12px}
+  .peek{display:inline-flex}
+  body:not(.side-collapsed) .peek{display:none}
+  body:not(.side-collapsed) .scrim{display:block}
+  .wrap{padding:0 16px 92px}
+  main{padding-top:16px}
+}
 /* ---------- responsive ---------- */
 @media (max-width:860px){
   .pyr .layer{width:100%!important}
@@ -269,16 +352,15 @@ footer a:hover{text-decoration:underline}
   .tracks{grid-template-columns:1fr}
   .phase{grid-template-columns:1fr;gap:8px}
   .phase .when::after{display:none}
-  .gauge{width:100%}
 }
 @media (max-width:560px){
-  h1{font-size:19px}
   .toolbar{position:static}
   .item{grid-template-columns:18px 1fr;gap:8px;padding:9px 10px}
 }
 @media print{
-  header.top{position:static}
-  .toolbar,.tabs,.btn{display:none!important}
+  .side,.peek,.scrim{display:none!important}
+  .app{display:block}
+  .toolbar,.nav,.btn,.collapse-btn{display:none!important}
   section.view{display:block!important;page-break-inside:avoid}
   .card{box-shadow:none}
   body{background:#fff}
@@ -287,35 +369,63 @@ footer a:hover{text-decoration:underline}
 </head>
 <body>
 <a class="sr" href="#main">跳到主要内容</a>
-<header class="top">
-  <div class="top-in">
-    <div class="top-row">
-      <div>
-        <div class="kicker" id="kicker"></div>
-        <h1 id="docTitle"></h1>
-        <p class="lead" id="lead"></p>
-      </div>
-      <div class="gauge">
-        <div class="ctrls">
-        <div class="ring" id="ring" role="img" aria-label="总体达成进度">
-          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
-            <circle cx="28" cy="28" r="24" fill="none" stroke="var(--line)" stroke-width="6"></circle>
-            <circle id="ringArc" cx="28" cy="28" r="24" fill="none" stroke="var(--accent)" stroke-width="6"
-                    stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="151"
-                    style="transition:stroke-dashoffset .4s ease"></circle>
-          </svg>
-          <div class="ring-val" id="ringVal">0%</div>
-        </div>
-          <div class="legend" id="legend"></div>
-          <div class="btns"><button class="btn" id="printBtn" type="button">打印 / 存 PDF</button>
-          <button class="btn" id="resetBtn" type="button">重置进度</button></div>
-        </div>
-      </div>
-    </div>
-    <nav class="tabs" id="tabs" role="tablist" aria-label="视图切换"></nav>
-  </div>
-</header>
+<div class="app">
 
+<aside class="side" id="side" aria-label="导航与进度">
+  <button class="collapse-btn" id="sideToggle" type="button" aria-controls="side" aria-expanded="true"
+          title="折叠侧栏" aria-label="折叠侧栏">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <div class="side-top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">27</span>
+      <span class="brand-txt">
+        <span class="kicker" id="kicker"></span>
+        <h1 id="docTitle"></h1>
+      </span>
+    </div>
+  </div>
+  <div class="side-scroll">
+    <p class="lead" id="lead"></p>
+    <div class="gauge">
+      <div class="ring" id="ring" role="img" aria-label="总体达成进度">
+        <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="var(--line)" stroke-width="6"></circle>
+          <circle id="ringArc" cx="28" cy="28" r="24" fill="none" stroke="var(--accent)" stroke-width="6"
+                  stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="151"
+                  style="transition:stroke-dashoffset .4s ease"></circle>
+        </svg>
+        <div class="ring-val" id="ringVal">0%</div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <nav class="nav" id="tabs" role="tablist" aria-orientation="vertical" aria-label="视图切换"></nav>
+    <div class="side-sect" id="outlineHead">清单目录</div>
+    <nav class="outline" id="outline" aria-label="清单目录"></nav>
+  </div>
+  <div class="side-foot">
+    <button class="btn" id="printBtn" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 9V4h10v5"/><path d="M7 19H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/>
+        <path d="M7 15h10v6H7z"/></svg>
+      <span class="btn-label">打印 / 存 PDF</span></button>
+    <button class="btn" id="resetBtn" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg>
+      <span class="btn-label">重置进度</span></button>
+  </div>
+</aside>
+
+<button class="scrim" id="scrim" type="button" tabindex="-1" aria-label="关闭侧栏"></button>
+<button class="peek" id="sidePeek" type="button" aria-controls="side" aria-expanded="false">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  目录 <b id="peekPct"></b></button>
+
+<div class="main-col">
 <div class="wrap">
 <main id="main">
   <section class="view" id="view-overview" role="tabpanel" aria-label="速览"></section>
@@ -330,6 +440,8 @@ footer a:hover{text-decoration:underline}
   <span id="footNote"></span>
   <span id="footMeta"></span>
 </footer>
+</div>
+</div>
 </div>
 
 <script>
@@ -716,17 +828,21 @@ function renderSources() {
 
 /* ----------------------------- shell: tabs, progress, wiring ----------------------------- */
 const VIEWS = [
-  ["overview", "速览"], ["list", "能力清单"], ["score", "自评打分"], ["levels", "分级门槛线"],
-  ["plan", "90 天计划"], ["flags", "红旗清单"], ["src", "来源与修订"]
+  ["overview", "速览", "速"], ["list", "能力清单", "单"], ["score", "自评打分", "分"],
+  ["levels", "分级门槛线", "级"], ["plan", "90 天计划", "计"], ["flags", "红旗清单", "旗"],
+  ["src", "来源与修订", "源"]
 ];
 function renderTabs() {
-  $("#tabs").innerHTML = VIEWS.map(v => '<button class="tab" role="tab" type="button" data-view="' + v[0] +
-    '" aria-selected="false" aria-controls="view-' + v[0] + '">' + v[1] + '<span class="cnt" data-cnt="' + v[0] + '" hidden></span></button>').join("");
-  $$(".tab").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
+  $("#tabs").innerHTML = VIEWS.map(v => '<button class="nav-item" role="tab" type="button" data-view="' + v[0] +
+    '" title="' + attr(v[1]) + '" aria-selected="false" aria-controls="view-' + v[0] + '">' +
+    '<span class="ico" aria-hidden="true">' + v[2] + '</span><span class="lab">' + v[1] +
+    '</span><span class="cnt" data-cnt="' + v[0] + '" hidden></span></button>').join("");
+  $$(".nav-item").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
   $("#tabs").addEventListener("keydown", e => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     const i = VIEWS.findIndex(v => v[0] === state.view);
-    show(VIEWS[(i + (e.key === "ArrowRight" ? 1 : VIEWS.length - 1)) % VIEWS.length][0]);
+    const fwd = e.key === "ArrowDown" || e.key === "ArrowRight";
+    show(VIEWS[(i + (fwd ? 1 : VIEWS.length - 1)) % VIEWS.length][0]);
     e.preventDefault();
   });
 }
@@ -734,8 +850,14 @@ function show(v, keepHash) {
   state.view = v; save();
   if (location.hash.slice(1) !== v) { try { history.replaceState(null, "", "#" + v); } catch (e) {} }
   $$(".view").forEach(s => s.classList.toggle("on", s.id === "view-" + v));
-  $$(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
+  $$(".nav-item").forEach(b => {
+    const on = b.dataset.view === v;
+    b.setAttribute("aria-selected", String(on));
+    b.tabIndex = on ? 0 : -1;
+  });
+  if (MQ_SMALL.matches && state.side !== "collapsed") setSide(false);
   window.scrollTo({ top: 0, behavior: isRTL ? "auto" : "smooth" });
+  spyOutline();
 }
 function gotoCard(id) {
   show("list");
@@ -760,6 +882,10 @@ function refresh() {
       box.setAttribute("aria-label", "已完成 " + done + " / " + total);
     });
   });
+  $$("[data-dot]").forEach(el => {
+    const keys = AGG[el.dataset.dot] || [];
+    el.classList.toggle("on", keys.length > 0 && keys.every(k => state.checks[k]));
+  });
   $$("[data-blk]").forEach(b => {
     const keys = AGG["blk:" + b.dataset.blk] || [];
     b.classList.toggle("done-all", keys.length > 0 && keys.every(k => state.checks[k]));
@@ -770,6 +896,7 @@ function refresh() {
   $("#ringArc").setAttribute("stroke-dashoffset", String(151 - (151 * pct) / 100));
   $("#ringVal").textContent = pct + "%";
   $("#ring").setAttribute("aria-label", "总体达成进度 " + pct + "%（已勾选 " + done + " / " + all.length + " 项）");
+  const pp = $("#peekPct"); if (pp) pp.textContent = pct + "%";
   const types = {};
   ["门票", "基础", "溢价", "转化"].forEach(t => {
     const keys = AGG["type:" + t] || [];
@@ -791,11 +918,79 @@ function refresh() {
   refreshScore();
   if (filters.q || filters.st !== "all" || filters.ty) applyFilters();
 }
+/* ----------------------------- sidebar: outline, collapse, scroll-spy ----------------------------- */
+const MQ_SMALL = window.matchMedia("(max-width:960px)");
+function shortName(t) {
+  const s = stripGlyph(plain(t)).split("：")[0].split("(")[0].trim();
+  return s.length > 14 ? s.slice(0, 13) + "…" : s;
+}
+function renderOutline() {
+  const el = $("#outline");
+  if (!el) return;
+  el.innerHTML = DATA.cards.map(c =>
+    '<button class="ol-item" type="button" data-goto="card-' + c.no + '" title="' + attr(plain(c.title)) + '">' +
+    '<span class="ol-no">' + esc(c.no) + '</span><span class="ol-nm">' + esc(shortName(c.title)) + '</span>' +
+    '<span class="ol-dot" data-dot="card:' + c.no + '" aria-hidden="true"></span></button>').join("");
+  $("#outlineHead").hidden = !DATA.cards.length;
+}
+function sideOpen() { return state.side !== "collapsed"; }
+function applySide() {
+  const open = sideOpen();
+  document.body.classList.toggle("side-collapsed", !open);
+  const t = $("#sideToggle");
+  if (t) {
+    t.setAttribute("aria-expanded", String(open));
+    const label = open ? "折叠侧栏" : "展开侧栏";
+    t.setAttribute("aria-label", label); t.title = label + " (Ctrl/⌘ + B)";
+  }
+  const p = $("#sidePeek"); if (p) p.setAttribute("aria-expanded", String(open));
+}
+function setSide(open) { state.side = open ? "open" : "collapsed"; save(); applySide(); }
+function wireSidebar() {
+  if (typeof state.side !== "string") state.side = "open";
+  if (MQ_SMALL.matches) state.side = "collapsed";     // drawer always starts shut on small screens
+  applySide();
+  $("#sideToggle").addEventListener("click", () => setSide(!sideOpen()));
+  $("#sidePeek").addEventListener("click", () => setSide(true));
+  $("#scrim").addEventListener("click", () => setSide(false));
+  const onBreak = e => { state.side = e.matches ? "collapsed" : "open"; save(); applySide(); };
+  if (MQ_SMALL.addEventListener) MQ_SMALL.addEventListener("change", onBreak);
+  else if (MQ_SMALL.addListener) MQ_SMALL.addListener(onBreak);
+  document.addEventListener("keydown", e => {
+    const k = (e.key || "").toLowerCase();
+    if ((e.metaKey || e.ctrlKey) && k === "b") { e.preventDefault(); setSide(!sideOpen()); }
+    else if (k === "escape" && MQ_SMALL.matches && sideOpen()) setSide(false);
+  });
+}
+function spyOutline() {
+  const items = $$("#outline .ol-item");
+  const clear = () => items.forEach(b => { b.classList.remove("current"); b.removeAttribute("aria-current"); });
+  if (state.view !== "list") { clear(); return; }          // the outline only tracks the checklist view
+  const cards = $$("#view-list .card");
+  if (!cards.length) { clear(); return; }
+  let cur = cards[0];
+  for (let i = 0; i < cards.length; i++) { if (cards[i].getBoundingClientRect().top <= 150) cur = cards[i]; }
+  items.forEach(b => {
+    const on = b.dataset.goto === cur.id;
+    b.classList.toggle("current", on);
+    if (on) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
+  });
+}
+function wireSpy() {
+  let raf = 0;
+  window.addEventListener("scroll", () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; spyOutline(); });
+  }, { passive: true });
+  spyOutline();
+}
 function init() {
-  $("#kicker").textContent = "可验证的行为清单 · 每季自评 · " + DATA.cards.reduce((a, c) => a + c.blocks.length, 0) + " 个能力块";
+  $("#kicker").textContent = "可验证行为清单 · " + DATA.cards.reduce((a, c) => a + c.blocks.length, 0) + " 个能力块";
   $("#docTitle").textContent = plain(DATA.docTitle);
-  $("#lead").textContent = DATA.usage.length ? plain(DATA.usage[0]) : "";
+  const leadTxt = DATA.usage.length ? plain(DATA.usage[0]) : "";
+  $("#lead").textContent = leadTxt ? leadTxt.replace(/^用法：/, "").split("。")[0] + "。" : "";
   renderTabs(); renderOverview(); renderList(); renderScore(); renderLevels(); renderPlan(); renderFlags(); renderSources();
+  renderOutline();
   const uniq = {};
   Object.keys(AGG).forEach(id => {
     if (id === "flags" || id === "all" || id.indexOf("type:") === 0) return;
@@ -835,6 +1030,7 @@ function init() {
   $("#footNote").innerHTML = "源文件：<code>" + attr(SRCFILE) + "</code> · 本页由 <code>tools/build_web.py</code> 生成，勾选与打分只存在这台设备的浏览器里。";
   $("#footMeta").innerHTML = DATA.closing ? "版本 " + (DATA.sources.revisions.length ? "v2.1" : "v2") + " · " + BUILDSTAMP : "";
   $$(".item").forEach(i => i.classList.toggle(i.classList.contains("flag") ? "hit" : "done", $("input", i).checked));
+  wireSidebar(); wireSpy();
   const hash = location.hash.slice(1);
   if (VIEWS.some(v => v[0] === hash)) state.view = hash;
   show(state.view || "overview", true);
