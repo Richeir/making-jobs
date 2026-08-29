@@ -1,0 +1,15 @@
+/* type-token palette, ported from the legacy page (light + dark) */
+:root {
+  --ticket: #a4570b; --ticket-bg: #fff5e9; --ticket-line: #f0d3ac;
+  --base: #1c56b8; --base-bg: #eef4ff; --base-line: #c9dbf7;
+  --premium: #6a2fb0; --premium-bg: #f6f1fd; --premium-line: #ddcbf3;
+  --convert: #0f7264; --convert-bg: #eafaf5; --convert-line: #b7e3d7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ticket: #e8a95c; --ticket-bg: #2a1f13; --ticket-line: #4a371f;
+    --base: #82b1f5; --base-bg: #131f33; --base-line: #26405f;
+    --premium: #bfa0ee; --premium-bg: #211830; --premium-line: #3c2b56;
+    --convert: #5fd3b7; --convert-bg: #10241f; --convert-line: #1f4339;
+  }
+}
