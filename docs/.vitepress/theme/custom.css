@@ -1,3 +1,37 @@
+/* Widen doc pages to match the home layout container (max-width: 1152px).
+   VitePress hard-codes the doc content column to 688px; override it on
+   desktop so non-home pages share the home page's visual width. */
+@media (min-width: 768px) {
+  .VPDoc:not(.has-sidebar) .container {
+    max-width: calc(var(--vp-layout-max-width) - 64px) !important;
+  }
+  .VPDoc:not(.has-sidebar) .content {
+    max-width: 100% !important;
+  }
+  .VPDoc .content-container {
+    max-width: 1152px !important;
+    width: 100%;
+  }
+}
+
+/* On wide screens drop the right-hand outline aside so the content column
+   uses the full layout width (same as the home hero / nav container). */
+@media (min-width: 1100px) {
+  .VPDoc .aside {
+    display: none !important;
+  }
+  .VPDoc:not(.has-sidebar) .container {
+    max-width: calc(var(--vp-layout-max-width) - 64px) !important;
+  }
+  .VPDoc .content {
+    max-width: 100% !important;
+  }
+  .VPDoc .content-container {
+    max-width: 1312px !important;
+    width: 100%;
+  }
+}
+
 /* type-token palette, ported from the legacy page (light + dark) */
 :root {
   --ticket: #a4570b; --ticket-bg: #fff5e9; --ticket-line: #f0d3ac;
@@ -5,11 +39,13 @@
   --premium: #6a2fb0; --premium-bg: #f6f1fd; --premium-line: #ddcbf3;
   --convert: #0f7264; --convert-bg: #eafaf5; --convert-line: #b7e3d7;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ticket: #e8a95c; --ticket-bg: #2a1f13; --ticket-line: #4a371f;
-    --base: #82b1f5; --base-bg: #131f33; --base-line: #26405f;
-    --premium: #bfa0ee; --premium-bg: #211830; --premium-line: #3c2b56;
-    --convert: #5fd3b7; --convert-bg: #10241f; --convert-line: #1f4339;
-  }
+/* Dark tokens follow VitePress's theme system: it adds `.dark` to <html>
+   for both the auto (system) and manual dark modes. Keep this in sync with
+   that class instead of a bare `prefers-color-scheme` query, otherwise the
+   light/dark toggle appears to do nothing to these custom cards. */
+html.dark {
+  --ticket: #e8a95c; --ticket-bg: #2a1f13; --ticket-line: #4a371f;
+  --base: #82b1f5; --base-bg: #131f33; --base-line: #26405f;
+  --premium: #bfa0ee; --premium-bg: #211830; --premium-line: #3c2b56;
+  --convert: #5fd3b7; --convert-bg: #10241f; --convert-line: #1f4339;
 }

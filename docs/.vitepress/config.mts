@@ -1,5 +1,12 @@
 import { defineConfig } from "vitepress";
 
+// A NODE_ENV=production inherited from the shell pollutes vite dev mode:
+// the dev server then injects import.meta.env.DEV=false into client code
+// and the dev HTML (which lacks the production theme scripts) misbehaves,
+// e.g. the dark/light toggle only applying after a full reload. Builds are
+// unaffected either way (vite re-derives NODE_ENV from the mode).
+if (process.env.NODE_ENV === "production") delete process.env.NODE_ENV;
+
 export default defineConfig({
   base: "/making-jobs/",
   srcExclude: ["skills/_*.md"],
@@ -24,7 +31,9 @@ export default defineConfig({
     ],
     sidebar: "auto",
     search: { provider: "local" },
-    outline: true,
+    // 注意：`outline: true` 在 VitePress 1.6.4 会击穿 useLocalNav（布尔值被当数组解构，
+    // 挂载时抛 "is not iterable"，连带主题开关 aria-checked 滞后一拍）。
+    // [2, 3] 即默认值；需要调整层级时再显式写。
     editLink: undefined,
     footer: {
       message: "勾选与打分只保存在本机浏览器。",
