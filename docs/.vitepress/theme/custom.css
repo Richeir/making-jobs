@@ -189,3 +189,48 @@ html.dark .VPHome::before {
 /* Custom card components: align their corners with the new radius scale */
 html.dark .VPFeature { background: var(--vp-c-bg-elv); }
 
+
+/* ---------- print: paper is still part of this list's worldview ---------- */
+/* A clean black-on-white printout of the whole checklist: hide chrome,
+   keep checkboxes (empty boxes to tick by hand), expand anything collapsed. */
+@media print {
+  .VPSidebar,
+  .VPNav,
+  .VPLocalNav,
+  .VPFooter,
+  .VPContent.has-sidebar {
+    display: none !important;
+  }
+  .VPContent { padding-top: 0 !important; }
+  .vp-doc { max-width: 100% !important; }
+  /* interactive toolbars / export buttons / progress rings are screen-only */
+  .toolbar,
+  .layers,
+  .data-io,
+  .ring,
+  .hp-card,
+  .no-print {
+    display: none !important;
+  }
+  /* force every collapsible block open on paper (v-show leaves inline display:none) */
+  .blk.closed > .blk-body {
+    display: block !important;
+  }
+  .blk .chev { display: none !important; }
+  /* checkboxes must actually print: appearance:none hacks vanish otherwise */
+  .item input {
+    appearance: auto !important;
+    width: 13px;
+    height: 13px;
+    print-color-adjust: exact;
+  }
+  .item,
+  .item.done { background: #fff !important; }
+  .card,
+  .blk.lvl4 { break-inside: avoid; }
+  body,
+  .vp-doc {
+    color: #111 !important;
+    background: #fff !important;
+  }
+}

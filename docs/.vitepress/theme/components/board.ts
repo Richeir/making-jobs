@@ -1,21 +1,9 @@
 /** Pure helpers shared by board components (ported from the legacy page). */
+import type { BlockNode, Item } from "../types";
 
-export interface Item {
-  k: string;
-  t: string;
-}
-export interface BlockNodeData {
-  id: string;
-  name: string;
-  sub: string;
-  notes: string[];
-  cutoff: string;
-  depth: number;
-  items: Item[];
-  subs: BlockNodeData[];
-  type: string;
-  link?: string;
-}
+export type { Item };
+
+export type BlockNodeData = BlockNode;
 
 export const plain = (s: string) => String(s).replace(/<[^>]+>/g, "");
 export const stripGlyph = (s: string) => s.replace(/^[①②③④⑤]\s*/, "");

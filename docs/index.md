@@ -19,3 +19,5 @@ features:
   - title: 💾 进度本地保存
     details: 勾选/打分存本机，可导出 JSON 迁移设备
 ---
+
+<HomeProgress />

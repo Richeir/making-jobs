@@ -4,13 +4,14 @@ import data from "../../data/checklist.json";
 import { useProgress, aggKeys } from "../composables/useProgress";
 import { weightedTotal, bandFor, radarPoints, pathOf, type Row } from "../composables/score";
 import { plain } from "./board";
+import type { ChecklistData } from "../types";
 
 const { state, setScore, setAct, load } = useProgress();
 onMounted(() => load());
 
-const sc = (data as any).scoring as { title: string; rows: Row[]; prose: string[]; legend: string[]; notes: string[] };
-const ev = (data as any).evidence;
-const agg = aggKeys(data as any);
+const sc = (data as ChecklistData).scoring;
+const ev = (data as ChecklistData).evidence;
+const agg = aggKeys(data as ChecklistData);
 const rows = sc.rows;
 const badgeCls: Record<string, string> = { 门票: "tk", 基础: "bs", 溢价: "pm", 转化: "cv" };
 const typeEmoji: Record<string, string> = { 门票: "🎫", 基础: "🧱", 溢价: "💎", 转化: "🚀" };
@@ -80,7 +81,7 @@ const SCALE = ["0 · 没概念", "1 · 用过说不清", "2 · 能独立完成�
             <div>
               <div class="nm"><span v-html="r.layer"></span><span class="badge" :class="badgeCls[r.type]">{{ typeEmoji[r.type] }} {{ r.type }}</span></div>
               <div class="meta"><span>权重 {{ r.weight }}%</span><span>加权 <b>{{ perRow(r) }}</b></span>
-                <a class="btn" :href="`/making-jobs/checklist#card-${String((r as any).link || '7.1').split('.')[0]}`">🔗 去看清单</a></div>
+                <a class="btn" :href="`/making-jobs/checklist#card-${(r.link || '7.1').split('.')[0]}`">🔗 去看清单</a></div>
             </div>
             <div class="seg" :class="state.scores[r.k] !== undefined ? 's' + state.scores[r.k] : ''" role="group" :aria-label="plain(r.layer || '') + ' 自评得分'">
               <button v-for="v in [0, 1, 2, 3]" :key="v" type="button" :aria-pressed="state.scores[r.k] === v" :aria-label="v + ' 分'" @click="setScore(r.k, v)">{{ v }}</button>

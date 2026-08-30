@@ -3,13 +3,14 @@ import { computed, onMounted } from "vue";
 import data from "../../data/checklist.json";
 import { useProgress } from "../composables/useProgress";
 import { collectKeys, plain } from "./board";
+import type { ChecklistData } from "../types";
 import ItemRow from "./ItemRow.vue";
 
 const { state, load } = useProgress();
 onMounted(() => load());
-const lv = (data as any).levels;
+const lv = (data as ChecklistData).levels;
 const cards = computed(() =>
-  lv.cards.map((c: any) => {
+  lv.cards.map((c) => {
     const keys = collectKeys(c);
     return { ...c, keys, done: keys.filter((k) => state.checks[k]).length };
   }),

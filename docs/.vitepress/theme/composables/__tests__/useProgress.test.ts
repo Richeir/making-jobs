@@ -25,6 +25,36 @@ describe("useProgress", () => {
     expect(Object.keys(p.state.checks).length).toBe(0);
   });
 
+  it("旧版 payload（带 view/side）载入后丢弃死字段、恢复折叠", () => {
+    localStorage.setItem(
+      "mj2027-progress-v1",
+      JSON.stringify({
+        checks: { "2.1:0": true },
+        scores: {},
+        acts: {},
+        view: "overview",
+        side: "open",
+        collapsed: ["2.1"],
+      }),
+    );
+    const p = useProgress();
+    p.load();
+    expect(p.state.checks["2.1:0"]).toBe(true);
+    expect(p.state.collapsed).toEqual(["2.1"]);
+    expect("view" in p.state).toBe(false);
+    expect("side" in p.state).toBe(false);
+  });
+
+  it("损坏的 collapsed 条目被过滤为非字符串", () => {
+    localStorage.setItem(
+      "mj2027-progress-v1",
+      JSON.stringify({ checks: {}, collapsed: ["2.1", 42, null] }),
+    );
+    const p = useProgress();
+    p.load();
+    expect(p.state.collapsed).toEqual(["2.1"]);
+  });
+
   it("导出可被导入还原", () => {
     const p = useProgress();
     p.setCheck("9:0", true);
