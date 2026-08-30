@@ -16,6 +16,7 @@ onMounted(() => load());
 const cards = (data as any).cards;
 const listTotal = cards.reduce((a: number, c: any) => a + agg.card["card:" + c.no].length, 0);
 const TYPES = ["门票", "基础", "溢价", "转化"];
+const typeEmoji: Record<string, string> = { 门票: "🎫", 基础: "🧱", 溢价: "💎", 转化: "🚀" };
 const badgeCls: Record<string, string> = { 门票: "tk", 基础: "bs", 溢价: "pm", 转化: "cv" };
 
 const overallPct = computed(() =>
@@ -58,17 +59,17 @@ function cardDone(c: any) {
   <div class="board">
     <div class="toolbar">
       <div class="search">
-        <input v-model.trim="filters.q" type="search" placeholder="搜索清单条目，如 上下文 / MVCC / 埋雷 / eval" aria-label="搜索清单条目">
+        <input v-model.trim="filters.q" type="search" placeholder="🔍 搜索清单条目，如 上下文 / MVCC / 埋雷 / eval" aria-label="搜索清单条目">
       </div>
       <div class="chips">
-        <button v-for="v in [['all', '全部'], ['todo', '未完成'], ['done', '已完成']]" :key="v[0]" class="chip" data-f="st" :data-v="v[0]" :aria-pressed="filters.st === v[0]" @click="toggleSt(v[0] as Filters['st'])">{{ v[1] }}</button>
+        <button v-for="v in [['all', '🌈 全部'], ['todo', '⏳ 未完成'], ['done', '✅ 已完成']]" :key="v[0]" class="chip" data-f="st" :data-v="v[0]" :aria-pressed="filters.st === v[0]" @click="toggleSt(v[0] as Filters['st'])">{{ v[1] }}</button>
       </div>
       <div class="chips">
-        <button v-for="t in TYPES" :key="t" class="chip tp" data-f="ty" :data-v="t" :class="badgeCls[t]" :aria-pressed="filters.ty === t" @click="toggleTy(t)">{{ t }}</button>
+        <button v-for="t in TYPES" :key="t" class="chip tp" data-f="ty" :data-v="t" :class="badgeCls[t]" :aria-pressed="filters.ty === t" @click="toggleTy(t)">{{ typeEmoji[t] }} {{ t }}</button>
       </div>
       <span class="small muted">
         <template v-if="filters.q || filters.st !== 'all' || filters.ty">显示 {{ shownCount }} / {{ listTotal }} 项</template>
-        <template v-else>共 {{ listTotal }} 项 · 勾选状态自动保存在本机</template>
+        <template v-else>📋 共 {{ listTotal }} 项 · 💾 勾选状态自动保存在本机</template>
       </span>
       <ProgressRing :pct="overallPct" />
     </div>
@@ -79,7 +80,7 @@ function cardDone(c: any) {
         <span class="dot">{{ c.layer }}</span>
         <h2>{{ c.layerName }} · {{ c.title.replace(/<[^>]+>/g, "").replace(/^[①②③④⑤★]\s*/, "") }}</h2>
         <span class="spacer" style="flex: 1"></span>
-        <span v-for="b in c.blocks" :key="b.id" class="badge" :class="badgeCls[b.type]">{{ b.type }}</span>
+        <span v-for="b in c.blocks" :key="b.id" class="badge" :class="badgeCls[b.type]">{{ typeEmoji[b.type] }} {{ b.type }}</span>
         <span class="prog"><span class="bar"><i :style="{ width: cardDone(c) + '%' }"></i></span><span class="pl">{{ agg.card["card:" + c.no].filter((k) => state.checks[k]).length }}/{{ agg.card["card:" + c.no].length }}</span></span>
       </div>
       <div class="card-bd">
@@ -91,7 +92,7 @@ function cardDone(c: any) {
       </article>
     </template>
 
-    <p v-if="shownCount === 0" class="empty">没有匹配的条目</p>
+    <p v-if="shownCount === 0" class="empty">🔎 没有匹配的条目，换个关键词试试</p>
   </div>
 </template>
 <style scoped>

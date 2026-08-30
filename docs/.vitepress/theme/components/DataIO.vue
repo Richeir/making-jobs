@@ -21,9 +21,9 @@ function doReset() {
 </script>
 <template>
   <div class="data-io">
-    <button type="button" @click="download">导出进度</button>
-    <label class="import">导入进度<input type="file" accept="application/json" @change="onFile" hidden></label>
-    <button type="button" @click="doReset">重置</button>
+    <button type="button" @click="download">📤 导出进度</button>
+    <label class="import">📥 导入进度<input type="file" accept="application/json" @change="onFile" hidden></label>
+    <button type="button" @click="doReset">🗑️ 重置</button>
   </div>
 </template>
 <style scoped>

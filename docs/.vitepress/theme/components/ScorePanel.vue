@@ -13,6 +13,7 @@ const ev = (data as any).evidence;
 const agg = aggKeys(data as any);
 const rows = sc.rows;
 const badgeCls: Record<string, string> = { 门票: "tk", 基础: "bs", 溢价: "pm", 转化: "cv" };
+const typeEmoji: Record<string, string> = { 门票: "🎫", 基础: "🧱", 溢价: "💎", 转化: "🚀" };
 
 const scoredCount = computed(() => rows.filter((r) => state.scores[r.k] !== undefined).length);
 const total = computed(() => weightedTotal(rows, state.scores));
@@ -77,9 +78,9 @@ const SCALE = ["0 · 没概念", "1 · 用过说不清", "2 · 能独立完成�
         <div class="card"><div class="card-bd">
           <div v-for="r in rows" :key="r.k" class="score-row">
             <div>
-              <div class="nm"><span v-html="r.layer"></span><span class="badge" :class="badgeCls[r.type]">{{ r.type }}</span></div>
+              <div class="nm"><span v-html="r.layer"></span><span class="badge" :class="badgeCls[r.type]">{{ typeEmoji[r.type] }} {{ r.type }}</span></div>
               <div class="meta"><span>权重 {{ r.weight }}%</span><span>加权 <b>{{ perRow(r) }}</b></span>
-                <a class="btn" :href="`/making-jobs/checklist#card-${String((r as any).link || '7.1').split('.')[0]}`">去看清单</a></div>
+                <a class="btn" :href="`/making-jobs/checklist#card-${String((r as any).link || '7.1').split('.')[0]}`">🔗 去看清单</a></div>
             </div>
             <div class="seg" :class="state.scores[r.k] !== undefined ? 's' + state.scores[r.k] : ''" role="group" :aria-label="plain(r.layer || '') + ' 自评得分'">
               <button v-for="v in [0, 1, 2, 3]" :key="v" type="button" :aria-pressed="state.scores[r.k] === v" :aria-label="v + ' 分'" @click="setScore(r.k, v)">{{ v }}</button>
@@ -92,14 +93,14 @@ const SCALE = ["0 · 没概念", "1 · 用过说不清", "2 · 能独立完成�
       </div>
       <div class="col">
         <div class="total">
-          <span class="small muted">加权总分（0–3）</span>
+          <span class="small muted">🧮 加权总分（0–3）</span>
           <span class="v">{{ scoredCount ? total.toFixed(2) : "—" }}</span>
           <span class="band" :class="band[0] === 'nu' ? '' : band[0]">{{ band[1] }}</span>
           <span class="spacer" style="flex: 1"></span>
           <span class="small muted">已评 {{ scoredCount }} / {{ rows.length }} 项</span>
         </div>
         <div v-if="scoredCount && lowTicket.length" class="alert">
-          <div><b>门票告警</b><div>{{ alertMsg }}</div></div>
+          <div><b>🚨 门票告警</b><div>{{ alertMsg }}</div></div>
         </div>
         <div class="card" style="margin-top: 12px"><div class="card-bd">
           <div class="sr" aria-live="polite">{{ radarSR }}</div>

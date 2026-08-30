@@ -49,3 +49,143 @@ html.dark {
   --premium: #bfa0ee; --premium-bg: #211830; --premium-line: #3c2b56;
   --convert: #5fd3b7; --convert-bg: #10241f; --convert-line: #1f4339;
 }
+
+/* ---------- modernization layer ---------- */
+/* Design tokens: brand hue, radius, elevation. Components that use
+   var(--vp-radius) inherit the softer corners automatically. */
+:root {
+  --vp-c-brand-1: #4f46e5;
+  --vp-c-brand-2: #6366f1;
+  --vp-c-brand-3: #6366f1;
+  --vp-c-default-soft: var(--vp-c-gray-soft);
+
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.72);
+  --vp-sidebar-bg-color: rgba(250, 250, 253, 0.6);
+
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-gutter: #ececf3;
+
+  --mj-radius-lg: 16px;
+  --mj-shadow-1: 0 1px 2px rgba(17, 17, 34, 0.05), 0 8px 24px -12px rgba(17, 17, 34, 0.12);
+  --mj-shadow-2: 0 2px 4px rgba(17, 17, 34, 0.06), 0 16px 40px -12px rgba(79, 70, 229, 0.22);
+  --mj-brand-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+}
+
+html.dark {
+  --vp-c-brand-1: #a5b4fc;
+  --vp-c-brand-2: #818cf8;
+  --vp-c-brand-3: #6366f1;
+
+  --vp-nav-bg-color: rgba(20, 20, 25, 0.72);
+  --vp-sidebar-bg-color: rgba(16, 16, 21, 0.6);
+
+  --vp-c-bg-elv: #1b1b22;
+  --vp-c-gutter: #27272e;
+
+  --mj-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --mj-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.45), 0 16px 40px -12px rgba(99, 102, 241, 0.35);
+}
+
+/* Typography: tighter, friendlier stack; headings get a little more presence */
+:root {
+  --vp-font-family-base: "Inter var", "Inter", -apple-system, BlinkMacSystemFont,
+    "SF Pro SC", "SF Pro Text", "PingFang SC", "Helvetica Neue", "Segoe UI",
+    Roboto, "Noto Sans SC", sans-serif;
+  --vp-font-family-mono: "SF Mono", "JetBrains Mono", ui-monospace, "Cascadia Code",
+    Menlo, Consolas, monospace;
+}
+
+/* Softer corners everywhere VitePress exposes a radius token */
+:root {
+  --vp-radius: 10px;
+}
+
+.VPNav, .VPNavBar.has-sidebar .dark .divider { background: transparent; }
+.VPNavBar { backdrop-filter: blur(12px) saturate(1.4); -webkit-backdrop-filter: blur(12px) saturate(1.4); }
+
+/* Nav links: pill hover like modern docs (Stripe / Vercel style) */
+.VPNavBarMenuLink .text { transition: color 0.2s ease; }
+.VPNavBarMenu .VPMenuLink a:hover { color: var(--vp-c-brand-1); }
+
+/* Hero: gradient headline + ambient glow behind the home page */
+.VPHome { position: relative; overflow: clip; }
+.VPHome::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 560px;
+  background:
+    radial-gradient(600px 340px at 18% 0%, rgba(99, 102, 241, 0.16), transparent 70%),
+    radial-gradient(600px 340px at 82% 8%, rgba(217, 70, 239, 0.12), transparent 70%);
+  pointer-events: none;
+}
+html.dark .VPHome::before {
+  background:
+    radial-gradient(600px 340px at 18% 0%, rgba(99, 102, 241, 0.22), transparent 70%),
+    radial-gradient(600px 340px at 82% 8%, rgba(217, 70, 239, 0.14), transparent 70%);
+}
+.VPHome .VPHero { position: relative; }
+.VPHomeHero .name {
+  background: var(--mj-brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.VPHomeHero .heading { letter-spacing: -0.02em; }
+.VPHomeHero .tagline { max-width: 46ch; margin-left: auto; margin-right: auto; }
+
+/* Hero action buttons: gradient primary, pill shape */
+.VPHomeHero .actions .VPButton.brand {
+  background: var(--mj-brand-gradient);
+  border-color: transparent;
+  border-radius: 999px;
+  padding: 0 28px;
+  box-shadow: var(--mj-shadow-2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.VPHomeHero .actions .VPButton.brand:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+.VPHomeHero .actions .VPButton.alt {
+  border-radius: 999px;
+  padding: 0 28px;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Feature cards: elevated rounded cards with hover lift */
+.VPFeature {
+  border-radius: var(--mj-radius-lg) !important;
+  box-shadow: var(--mj-shadow-1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.VPFeature:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--mj-shadow-2);
+  border-color: var(--vp-c-brand-2) !important;
+}
+.VPFeature .title { letter-spacing: -0.01em; }
+
+/* Content polish: lighter tables/code, gentler borders on inline code */
+.vp-doc table { border-radius: 12px; overflow: hidden; }
+.vp-doc :not(pre) > code { border-radius: 6px; }
+.vp-doc h1, .vp-doc h2 { letter-spacing: -0.02em; }
+.vp-doc h2 { border-top: none; padding-top: 8px; }
+.vp-doc h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: var(--mj-brand-gradient);
+  opacity: 0.85;
+}
+
+/* Footer + sidebar feel */
+.VPFooter { backdrop-filter: blur(8px); }
+.VPSidebar { backdrop-filter: blur(8px); }
+
+/* Custom card components: align their corners with the new radius scale */
+html.dark .VPFeature { background: var(--vp-c-bg-elv); }
+

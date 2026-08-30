@@ -12,7 +12,7 @@ const hit = computed(() => f.items.filter((i: any) => state.checks[i.k]).length)
 </script>
 <template>
   <h2 class="sect">{{ plain(f.title) }}</h2>
-  <div class="count-line">命中 <b>{{ hit }}</b> / {{ f.items.length }} 条<span class="muted">{{ hit ? " · 出现任意一条，先修再投" : " · 勾掉你确实命中的那条" }}</span></div>
+  <div class="count-line">🚩 命中 <b>{{ hit }}</b> / {{ f.items.length }} 条<span class="muted">{{ hit ? " · ⚠️ 出现任意一条，先修再投" : " · ✅ 勾掉你确实命中的那条" }}</span></div>
   <div class="card"><div class="card-bd">
     <div v-if="f.notes.length" class="notes" style="margin-top: 12px"><p v-for="(n, i) in f.notes" :key="i" v-html="n"></p></div>
     <div class="items"><ItemRow v-for="it in f.items" :key="it.k" :it="it" flag /></div>

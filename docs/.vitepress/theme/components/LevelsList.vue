@@ -28,7 +28,7 @@ const cards = computed(() =>
         <span class="prog"><span class="bar"><i :style="{ width: (c.keys.length ? Math.round(c.done / c.keys.length * 100) : 0) + '%' }"></i></span><span class="pl">{{ c.done }}/{{ c.keys.length }}</span></span>
         <div class="items"><ItemRow v-for="it in c.items" :key="it.k" :it="it" /></div>
       </div>
-      <div v-if="c.cutoff" class="cutoff"><b>淘汰线</b>{{ c.cutoff }}</div>
+      <div v-if="c.cutoff" class="cutoff"><b>⛔ 淘汰线</b>{{ c.cutoff }}</div>
     </article>
   </div>
 </template>
