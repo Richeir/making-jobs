@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import data from "../../data/checklist.json";
-const s = (data as any).sources;
-const usage = (data as any).usage;
-const closing = (data as any).closing;
+import type { ChecklistData } from "../types";
+const s = (data as ChecklistData).sources;
+const usage = (data as ChecklistData).usage;
+const closing = (data as ChecklistData).closing;
 </script>
 <template>
   <h2 class="sect">{{ s.title }}</h2>

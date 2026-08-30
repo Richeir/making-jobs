@@ -3,12 +3,13 @@ import { computed, onMounted } from "vue";
 import data from "../../data/checklist.json";
 import { useProgress } from "../composables/useProgress";
 import { plain } from "./board";
+import type { ChecklistData } from "../types";
 import ItemRow from "./ItemRow.vue";
 
 const { state, load } = useProgress();
 onMounted(() => load());
-const f = (data as any).flags;
-const hit = computed(() => f.items.filter((i: any) => state.checks[i.k]).length);
+const f = (data as ChecklistData).flags;
+const hit = computed(() => f.items.filter((i) => state.checks[i.k]).length);
 </script>
 <template>
   <h2 class="sect">{{ plain(f.title) }}</h2>

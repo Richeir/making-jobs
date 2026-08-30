@@ -56,4 +56,40 @@ describe("ChecklistBoard", () => {
     const visible = wrapper.findAll('input[type="checkbox"][data-k]').filter((i) => i.isVisible());
     expect(visible.length).toBe(35);
   });
+
+  it("渲染五层导航，含每张卡的跳转锚点", () => {
+    const wrapper = w();
+    const layers = wrapper.findAll("[data-layer]");
+    expect(layers.length).toBe(6); // 六张能力卡（①②③④⑤ + ★求职资产）
+    expect(wrapper.find('#card-2').exists()).toBe(true);
+  });
+
+  it("折叠某块后其条目不可见，状态写回 store", async () => {
+    const wrapper = w();
+    await wrapper.find('[data-blk="2.1"] .chev').trigger("click");
+    expect(useProgress().state.collapsed).toContain("2.1");
+    expect(wrapper.findAll('input[data-k^="2.1#"]').filter((i) => i.isVisible()).length).toBe(0);
+  });
+
+  it("折叠状态从 store 回显", async () => {
+    useProgress().setCollapsed(["2.1"], true);
+    const wrapper = w();
+    expect(wrapper.find('[data-blk="2.1"] .chev').attributes("aria-expanded")).toBe("false");
+  });
+
+  it("全部折叠 / 全部展开切换顶层块", async () => {
+    const wrapper = w();
+    const btn = wrapper.find("[data-collapse-all]");
+    await btn.trigger("click");
+    expect(useProgress().state.collapsed.length).toBeGreaterThan(0);
+    await btn.trigger("click");
+    expect(useProgress().state.collapsed.length).toBe(0);
+  });
+
+  it("搜索时忽略折叠，命中项始终展开", async () => {
+    const wrapper = w();
+    await wrapper.find('[data-blk="2.1"] .chev').trigger("click"); // 先折叠 2.1
+    await wrapper.find('input[type="search"]').setValue("mvcc");
+    expect(wrapper.findAll('input[type="checkbox"][data-k]').filter((i) => i.isVisible()).length).toBeGreaterThan(0);
+  });
 });

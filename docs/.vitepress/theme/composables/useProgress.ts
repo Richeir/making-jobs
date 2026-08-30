@@ -6,16 +6,15 @@ interface ProgressState {
   checks: Record<string, boolean>;
   scores: Record<string, number>;
   acts: Record<string, string>;
-  view: string;
-  side: string;
+  /** block ids collapsed on the checklist board; [] = all open */
+  collapsed: string[];
 }
 
 const blank = (): ProgressState => ({
   checks: {},
   scores: {},
   acts: {},
-  view: "overview",
-  side: "open",
+  collapsed: [],
 });
 
 let singleton: ProgressState | null = null;
@@ -41,7 +40,19 @@ export function useProgress() {
     load() {
       try {
         const raw = localStorage.getItem(KEY);
-        if (raw) Object.assign(state, JSON.parse(raw));
+        // Object.assign copies only the payload's own keys, so stale fields
+        // from older schema versions (e.g. the removed `view`/`side`) are
+        // dropped rather than resurrected onto the reactive state.
+        if (raw) {
+          const o = JSON.parse(raw);
+          Object.assign(state, blank());
+          if (o && typeof o === "object") {
+            if (o.checks && typeof o.checks === "object") state.checks = o.checks;
+            if (o.scores && typeof o.scores === "object") state.scores = o.scores;
+            if (o.acts && typeof o.acts === "object") state.acts = o.acts;
+            if (Array.isArray(o.collapsed)) state.collapsed = o.collapsed.filter((x: any) => typeof x === "string");
+          }
+        }
       } catch {
         /* corrupt payload: stay on blank state */
       }
@@ -58,6 +69,19 @@ export function useProgress() {
       state.acts[k] = v;
       save();
     },
+    toggleCollapsed(id: string) {
+      const i = state.collapsed.indexOf(id);
+      if (i >= 0) state.collapsed.splice(i, 1);
+      else state.collapsed.push(id);
+      save();
+    },
+    /** set collapse state for a batch of block ids (board expand/collapse-all) */
+    setCollapsed(ids: string[], collapsed: boolean) {
+      const next = new Set(state.collapsed);
+      for (const id of ids) collapsed ? next.add(id) : next.delete(id);
+      state.collapsed = [...next];
+      save();
+    },
     reset() {
       Object.assign(state, blank());
       save();
@@ -69,7 +93,11 @@ export function useProgress() {
       try {
         const o = JSON.parse(text);
         if (o && typeof o.checks === "object" && o.checks !== null) {
-          Object.assign(state, blank(), o);
+          Object.assign(state, blank());
+          state.checks = o.checks;
+          if (o.scores && typeof o.scores === "object") state.scores = o.scores;
+          if (o.acts && typeof o.acts === "object") state.acts = o.acts;
+          if (Array.isArray(o.collapsed)) state.collapsed = o.collapsed.filter((x: any) => typeof x === "string");
           save();
         }
       } catch {
