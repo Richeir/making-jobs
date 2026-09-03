@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import data from "../../data/checklist.json";
+import { BASE } from "../../site.js";
 import { useProgress, aggKeys } from "../composables/useProgress";
 import { weightedTotal, bandFor, radarPoints, pathOf, type Row } from "../composables/score";
 import { plain } from "./board";
@@ -77,14 +78,14 @@ const SCALE = ["0 · 没概念", "1 · 用过说不清", "2 · 能独立完成�
     <div class="score-wrap">
       <div class="col">
         <div class="card"><div class="card-bd">
-          <div v-for="r in rows" :key="r.k" class="score-row">
+          <div v-for="r in rows" :key="r.k" class="score-row" :data-k="r.k">
             <div>
               <div class="nm"><span v-html="r.layer"></span><span class="badge" :class="badgeCls[r.type]">{{ typeEmoji[r.type] }} {{ r.type }}</span></div>
               <div class="meta"><span>权重 {{ r.weight }}%</span><span>加权 <b>{{ perRow(r) }}</b></span>
-                <a class="btn" :href="`/making-jobs/checklist#card-${(r.link || '7.1').split('.')[0]}`">🔗 去看清单</a></div>
+                <a class="btn" :href="`${BASE}checklist#card-${(r.link || '7.1').split('.')[0]}`">🔗 去看清单</a></div>
             </div>
             <div class="seg" :class="state.scores[r.k] !== undefined ? 's' + state.scores[r.k] : ''" role="group" :aria-label="plain(r.layer || '') + ' 自评得分'">
-              <button v-for="v in [0, 1, 2, 3]" :key="v" type="button" :aria-pressed="state.scores[r.k] === v" :aria-label="v + ' 分'" @click="setScore(r.k, v)">{{ v }}</button>
+              <button v-for="v in [0, 1, 2, 3]" :key="v" type="button" :data-s="v" :aria-pressed="state.scores[r.k] === v" :aria-label="v + ' 分'" @click="setScore(r.k, v)">{{ v }}</button>
             </div>
             <div class="next-act"><label :for="'act-' + r.k">下一动作</label>
               <input :id="'act-' + r.k" type="text" placeholder="一句话：下一步具体做什么" :value="state.acts[r.k] || ''" @input="setAct(r.k, ($event.target as HTMLInputElement).value)"></div>

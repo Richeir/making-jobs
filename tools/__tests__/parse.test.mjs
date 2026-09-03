@@ -7,7 +7,11 @@ import { buildData } from "../build-checklist.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SRC = resolve(here, "../../content/2027-programmer-job-skills-checklist.md");
-const BASELINE_FILE = "/tmp/baseline-data.json"; // Task 3 生成；本任务允许缺失（Ruling: 见 ledger）
+// The legacy Python payload, committed as a frozen fixture. Provenance:
+// extracted from the `const DATA = {…}` line of the retired hand-maintained
+// index.html at commit 6b48e1f^ (`git show 6b48e1f^:index.html`).
+// MJ_BASELINE points at an alternative copy for experiments.
+const BASELINE_FILE = process.env.MJ_BASELINE || resolve(here, "baseline-data.json");
 const BASELINE = existsSync(BASELINE_FILE) ? JSON.parse(readFileSync(BASELINE_FILE, "utf8")) : null;
 
 test("视图模型键齐全", () => {

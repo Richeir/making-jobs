@@ -1,40 +1,58 @@
 import { defineConfig } from "vitepress";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-
-const SITE = "https://richeir.github.io";
-const BASE = "/making-jobs/";
+import { SITE, BASE } from "./site.js";
 const TITLE = "2027 程序员求职能力清单";
 const DESC = "AI 时代可验证行为清单 · 可视化";
 
-// Skills sidebar, derived at config-load time from the generated payload
-// (predev/prebuild/CI all run `npm run build:data` before vitepress starts).
+const dataPath = fileURLToPath(new URL("./data/checklist.json", import.meta.url));
+const srcPath = fileURLToPath(new URL("../../content/2027-programmer-job-skills-checklist.md", import.meta.url));
+
+// Stale-payload guard: checklist.json is a build artifact and every theme
+// component imports it directly. Bypassing `npm run build:data` (the
+// predev/prebuild hooks) used to mean either a cryptic bundle-time import
+// error (missing file) or silently shipping yesterday's checklist (stale
+// file). Fail at config load, with the command to run, in both cases.
+if (!existsSync(dataPath))
+  throw new Error(
+    "[vitepress config] docs/.vitepress/data/checklist.json missing — run `npm run build:data` (the npm scripts do this automatically).",
+  );
+if (existsSync(srcPath) && statSync(srcPath).mtimeMs > statSync(dataPath).mtimeMs + 1000)
+  throw new Error(
+    "[vitepress config] content/*.md is newer than checklist.json — run `npm run build:data` before dev/build.",
+  );
+
+// Skills sidebar, derived at config-load time from the generated payload.
 // Links there carry the full base prefix; vitepress sidebar links are
-// base-relative, so strip it. Falls back to an empty list when the payload
-// is missing (e.g. vitepress invoked directly on a fresh clone).
+// base-relative, so strip it. (The payload's existence/freshness is already
+// guaranteed by the guard above.)
+interface SidebarItem {
+  text: string;
+  link: string;
+}
 interface SkillGroup {
   layer: string;
-  items: { text: string; link: string }[];
+  items: SidebarItem[];
 }
-let skillSidebar: SkillGroup[] = [];
-const dataPath = fileURLToPath(new URL("./data/checklist.json", import.meta.url));
-if (existsSync(dataPath)) {
-  const LAYER_NAMES: Record<string, string> = {
-    "2": "① 工程底座",
-    "3": "② AI 协作力",
-    "4": "③ AI 构建力",
-    "5": "④ 判断力",
-    "6": "⑤ 信任资本",
-    "7": "★ 求职资产",
-  };
-  const data = JSON.parse(readFileSync(dataPath, "utf8")) as { skillSidebar?: SkillGroup[] };
-  skillSidebar = (data.skillSidebar || [])
-    .sort((a, b) => a.layer.localeCompare(b.layer))
-    .map((g) => ({
-      text: LAYER_NAMES[g.layer] ? `📖 深入 · ${LAYER_NAMES[g.layer]}` : "📖 深入页",
-      items: g.items.map((i) => ({ text: i.text, link: i.link.slice(BASE.length - 1) })),
-    }));
+interface SidebarGroup {
+  text: string;
+  items: SidebarItem[];
 }
+const LAYER_NAMES: Record<string, string> = {
+  "2": "① 工程底座",
+  "3": "② AI 协作力",
+  "4": "③ AI 构建力",
+  "5": "④ 判断力",
+  "6": "⑤ 信任资本",
+  "7": "★ 求职资产",
+};
+const payload = JSON.parse(readFileSync(dataPath, "utf8")) as { skillSidebar?: SkillGroup[] };
+const skillSidebar: SidebarGroup[] = (payload.skillSidebar || [])
+  .sort((a, b) => a.layer.localeCompare(b.layer))
+  .map((g) => ({
+    text: LAYER_NAMES[g.layer] ? `📖 深入 · ${LAYER_NAMES[g.layer]}` : "📖 深入页",
+    items: g.items.map((i) => ({ text: i.text, link: i.link.slice(BASE.length - 1) })),
+  }));
 
 // A NODE_ENV=production inherited from the shell pollutes vite dev mode:
 // the dev server then injects import.meta.env.DEV=false into client code
@@ -75,8 +93,9 @@ export default defineConfig({
     ];
   },
   vite: {
-    // 允许组件 import 构建期生成的 JSON（阶段 2 起产出）
-    fs: { allow: [".."] },
+    // 允许组件 import 构建期生成的 JSON（阶段 2 起产出）。
+    // 注意 vite 的 fs 选项挂在 server.fs 下；顶层 fs 会被静默忽略。
+    server: { fs: { allow: [".."] } },
   },
   themeConfig: {
     nav: [

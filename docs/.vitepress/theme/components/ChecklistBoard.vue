@@ -2,7 +2,7 @@
 import { computed, onMounted, provide, reactive } from "vue";
 import data from "../../data/checklist.json";
 import { useProgress, aggKeys } from "../composables/useProgress";
-import { blockVisible, type BlockNodeData, type Filters, type Item } from "./board";
+import { blockVisible, itemVisible, type BlockNodeData, type Filters } from "./board";
 import type { CapabilityCard, ChecklistData } from "../types";
 import BlockNode from "./BlockNode.vue";
 import ProgressRing from "./ProgressRing.vue";
@@ -43,17 +43,9 @@ const shownCount = computed(() => {
 });
 function countVisible(node: BlockNodeData, type: string): number {
   const t = node.type || type;
-  let n = node.items.filter((i) => visibleItem(i, t)).length;
+  let n = node.items.filter((i) => itemVisible(i, t, filters, state.checks)).length;
   for (const s of node.subs) n += countVisible(s, t);
   return n;
-}
-function visibleItem(it: Item, type: string) {
-  const done = !!state.checks[it.k];
-  return (
-    (!filters.q || String(it.t).replace(/<[^>]+>/g, "").toLowerCase().includes(filters.q)) &&
-    (filters.st === "all" || (filters.st === "done") === done) &&
-    (!filters.ty || type === filters.ty)
-  );
 }
 function cardVisible(c: CapabilityCard) {
   return c.blocks.some((b) => blockVisible(b, b.type, filters, state.checks));

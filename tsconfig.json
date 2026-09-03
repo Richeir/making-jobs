@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "vitest.config.ts",
+    "docs/.vitepress/site.d.ts",
+    "docs/.vitepress/config.mts",
+    "docs/.vitepress/theme/**/*.ts",
+    "docs/.vitepress/theme/**/*.vue"
+  ]
+}

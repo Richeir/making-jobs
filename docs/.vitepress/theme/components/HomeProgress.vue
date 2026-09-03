@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import data from "../../data/checklist.json";
+import { BASE } from "../../site.js";
 import type { ChecklistData } from "../types";
 import { aggKeys, useProgress } from "../composables/useProgress";
 import ProgressRing from "./ProgressRing.vue";
@@ -41,7 +42,7 @@ const started = computed(() => doneCount.value > 0);
         <div class="hp-t">🧭 你的进度：{{ doneCount }} / {{ agg.all.length }} 项</div>
         <div class="hp-s">{{ startHint }}</div>
       </div>
-      <a class="hp-go" :href="started ? '/making-jobs/checklist' : '/making-jobs/checklist#card-2'">
+      <a class="hp-go" :href="started ? `${BASE}checklist` : `${BASE}checklist#card-2`">
         {{ started ? "继续清单 →" : "🎫 从门票开始 →" }}
       </a>
     </div>
