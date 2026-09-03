@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
+import { BASE } from "../docs/.vitepress/site.js";
 
 // --------------------------------------------------------------------------- //
 // helpers mirroring Python semantics
@@ -398,7 +399,7 @@ export function scanSkills(dir) {
     const { data } = matter(readFileSync(join(dir, f), "utf8"));
     const file = f.replace(/\.md$/, "");
     for (const blk of data.checklist || [])
-      out.push({ id: blk, file, link: `/making-jobs/skills/${file}`, title: data.title || file });
+      out.push({ id: blk, file, link: `${BASE}skills/${file}`, title: data.title || file });
   }
   return out;
 }

@@ -1,5 +1,5 @@
 import DefaultTheme from "vitepress/theme";
-import { inBrowser } from "vitepress";
+import { inBrowser, type Theme } from "vitepress";
 import ChecklistBoard from "./components/ChecklistBoard.vue";
 import ScorePanel from "./components/ScorePanel.vue";
 import DataIO from "./components/DataIO.vue";
@@ -12,7 +12,7 @@ import HomeProgress from "./components/HomeProgress.vue";
 import { installAppearanceAriaSync } from "./composables/appearanceAria";
 import "./custom.css";
 
-export default {
+const theme: Theme = {
   extends: DefaultTheme,
   enhanceApp(ctx) {
     ctx.app.component("ChecklistBoard", ChecklistBoard);
@@ -29,3 +29,5 @@ export default {
     if (inBrowser) installAppearanceAriaSync();
   },
 };
+
+export default theme;

@@ -28,17 +28,20 @@ docs/.vitepress/dist/                             ← GitHub Pages 部署
 ## 本地开发
 
 ```bash
-npm install
-npm run docs:dev      # 自动先跑 build:data，起 dev 服务器
-npm test              # vitest：解析器 + 组件 + store
-npm run docs:build    # 生产构建（先 build:data）
+npm install         # postinstall 自动应用已知上游补丁（见下）
+npm run docs:dev    # 自动先跑 build:data，起 dev 服务器
+npm test            # vitest：解析器 + 组件 + store + 内容完整性守护
+npm run typecheck   # vue-tsc：主题组件 / 配置 / 类型定义
+npm run docs:build  # 生产构建（先 build:data）
 ```
 
 `predev` / `prebuild` 钩子会先重新生成 `checklist.json`，改完 md 直接刷新即可。
 
+已知上游 bug 由 `tools/patch-upstream.mjs` 在 postinstall 时以幂等方式修补（当前 1 项：vitepress@1.6.4 的 `VPSidebar` watch 源码非法，Vue 3.5 下构建期告警且移动端侧栏滚动锁定失效）。上游修复后删掉补丁表项即可，脚本会在模式失配时给出提示。
+
 ## 部署
 
-GitHub Actions（`.github/workflows/deploy.yml`）：push 到 `main` 时构建并部署到 GitHub Pages；PR 只构建验证。生成物不入库。
+GitHub Actions（`.github/workflows/deploy.yml`）：push 到 `main` 时构建并部署到 GitHub Pages；PR 只构建验证。CI 顺序：`build:data → typecheck → test → docs:build`。生成物不入库。
 
 ## 目录速览
 

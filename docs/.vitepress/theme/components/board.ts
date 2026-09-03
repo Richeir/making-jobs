@@ -1,9 +1,9 @@
 /** Pure helpers shared by board components (ported from the legacy page). */
-import type { BlockNode, Item } from "../types";
+import type { FlatNode, Item } from "../types";
 
 export type { Item };
 
-export type BlockNodeData = BlockNode;
+export type BlockNodeData = FlatNode;
 
 export const plain = (s: string) => String(s).replace(/<[^>]+>/g, "");
 export const stripGlyph = (s: string) => s.replace(/^[①②③④⑤]\s*/, "");
@@ -15,7 +15,7 @@ export function splitHead(t: string): string {
   return t;
 }
 
-export function collectKeys(node: BlockNodeData): string[] {
+export function collectKeys(node: FlatNode): string[] {
   return [...node.items.map((i) => i.k), ...node.subs.flatMap(collectKeys)];
 }
 
@@ -32,15 +32,17 @@ export function itemVisible(
   checks: Record<string, boolean>,
 ): boolean {
   const done = !!checks[it.k];
+  // lowercase BOTH sides: the placeholder advertises queries like "MVCC"
+  // that only ever appear in differently-cased item text
   return (
-    (!f.q || plain(it.t).toLowerCase().includes(f.q)) &&
+    (!f.q || plain(it.t).toLowerCase().includes(f.q.toLowerCase())) &&
     (f.st === "all" || (f.st === "done") === done) &&
     (!f.ty || type === f.ty)
   );
 }
 
 export function blockVisible(
-  node: BlockNodeData,
+  node: FlatNode,
   inheritedType: string,
   f: Filters,
   checks: Record<string, boolean>,

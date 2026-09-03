@@ -25,14 +25,14 @@ describe("ChecklistBoard", () => {
     const wrapper = w();
     const box = wrapper.find('input[type="checkbox"][data-k]');
     await box.setValue(true);
-    expect(useProgress().state.checks[box.attributes("data-k")]).toBe(true);
+    expect(useProgress().state.checks[box.attributes("data-k")!]).toBe(true);
   });
 
   it("勾选状态从 store 回显", async () => {
     const p = useProgress();
     p.setCheck("2.2:0", true);
     const wrapper = w();
-    expect(wrapper.find('input[data-k="2.2:0"]').element.checked).toBe(true);
+    expect((wrapper.find('input[data-k="2.2:0"]').element as HTMLInputElement).checked).toBe(true);
   });
 
   it("搜索过滤隐藏无匹配项并显示空态", async () => {
@@ -48,6 +48,17 @@ describe("ChecklistBoard", () => {
     const visible = wrapper.findAll('input[type="checkbox"][data-k]').filter((i) => i.isVisible());
     expect(visible.length).toBeGreaterThan(0);
     expect(wrapper.findAll("[data-card]").length).toBe(2); // 实据：mvcc 命中 §2（原理）与 §7（简历写法）
+  });
+
+  it("搜索大小写不敏感（占位符示例 MVCC 必须能搜到）", async () => {
+    const lower = w();
+    await lower.find('input[type="search"]').setValue("mvcc");
+    const upper = w();
+    await upper.find('input[type="search"]').setValue("MVCC");
+    const n = (x: typeof lower) =>
+      x.findAll('input[type="checkbox"][data-k]').filter((i) => i.isVisible()).length;
+    expect(n(upper)).toBeGreaterThan(0);
+    expect(n(upper)).toBe(n(lower));
   });
 
   it("类型 chip 过滤到门票块", async () => {
